@@ -16,17 +16,14 @@ class _RegisterState extends State<Register> {
   var mobile;
   var password;
   var name;
-  final mobilecontroller = TextEditingController();
-  getItemAndNavigate(BuildContext context) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => OtpPage(
-                  mobileHolder: mobilecontroller.text,
-                  // emailHolder: mobile.text,
-                  // passwordHolder: password.text,
-                )));
-  }
+  var errorMessage;
+  // final mobilecontroller = TextEditingController();
+  // getItemAndNavigate(BuildContext context) {
+  //   Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (context) => OtpPage()));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +52,13 @@ class _RegisterState extends State<Register> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               TextFormField(
-                                controller: mobilecontroller,
+                                // controller: mobilecontroller,
+
                                 style: TextStyle(color: Color(0xFF000000)),
                                 cursorColor: Color(0xFF9b9b9b),
                                 keyboardType: TextInputType.phone,
                                 decoration: InputDecoration(
+                                  errorText: errorMessage,
                                   prefixIcon: Icon(
                                     Icons.phone,
                                     color: Colors.grey,
@@ -169,6 +168,8 @@ class _RegisterState extends State<Register> {
                                 validator: (passwordValue) {
                                   if (passwordValue.isEmpty) {
                                     return 'Please enter some text';
+                                  } else if (passwordValue.length < 8) {
+                                    return 'The password must be at least 8 characters';
                                   }
                                   password = passwordValue;
                                   return null;
@@ -201,7 +202,7 @@ class _RegisterState extends State<Register> {
                                   onPressed: () {
                                     if (_formKey.currentState.validate()) {
                                       _register();
-                                      getItemAndNavigate(context);
+                                      // getItemAndNavigate(context);
                                     }
                                   },
                                 ),
@@ -260,10 +261,29 @@ class _RegisterState extends State<Register> {
       // localStorage.setString('data', json.encode(body['data']));
 
       print(json.encode(body['msg']));
-      Navigator.push(
-        context,
-        new MaterialPageRoute(builder: (context) => OtpPage()),
-      );
+      print(json.encode(body['data']));
+      Navigator.push(context,
+          new MaterialPageRoute(builder: (context) => OtpPage(mobile)));
+    }
+
+    if (body['status'] == 'failed') {
+      // SharedPreferences localStorage = await SharedPreferences.getInstance();
+      // localStorage.setString('token', json.encode(body['token']));
+      //   localStorage.setString('msg', json.encode(body['msg']));
+      //  localStorage.setString(
+      //   'errorMessage', json.encode(body['data']['mobile']));
+
+      //localStorage.setString('data', json.encode(body['data']));
+
+      // var user = jsonDecode(localStorage.getString('data'));
+
+      errorMessage =
+          json.encode(body['data']['mobile'][0]).replaceAll('"', " ");
+      //  List<dynamic> output = jsonDecode(errorMessage);
+      // errorMessage = user['mobile'];
+      print(errorMessage);
+      // print(json.encode(body['msg']));
+      // print(json.encode(body['data']));
     }
 
     setState(() {
