@@ -10,7 +10,12 @@ class Network {
 
   _getToken() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    token = jsonDecode(localStorage.getString('token'))['token'];
+    // token = jsonDecode(localStorage.getString('data'))['token'];
+
+    var user = jsonDecode(localStorage.getString('data'));
+
+    token = user['token'];
+    print(token);
   }
 
   authData(data, apiurl) async {
@@ -22,7 +27,7 @@ class Network {
   getData(apiUrl) async {
     var fullUrl = baseUrl + apiUrl;
     await _getToken();
-    return await http.get(fullUrl, headers: _setHeaders());
+    return await http.post(fullUrl, headers: _setHeaders());
   }
 
 //is called arrow function
