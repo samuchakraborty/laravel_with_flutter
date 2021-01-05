@@ -96,6 +96,7 @@ class _OtpPageState extends State<OtpPage> {
   final _formKey = GlobalKey<FormState>();
   // final mobile;
   var otp;
+  var errorMessage;
   // var mobile;
   //final mobileController = TextEditingController();
   // getItemAndNavigate(BuildContext context) {
@@ -146,6 +147,7 @@ class _OtpPageState extends State<OtpPage> {
                                 keyboardType: TextInputType.text,
                                 obscureText: false,
                                 decoration: InputDecoration(
+                                  errorText: errorMessage,
                                   prefixIcon: Icon(
                                     Icons.vpn_key,
                                     color: Colors.grey,
@@ -156,11 +158,13 @@ class _OtpPageState extends State<OtpPage> {
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal),
                                 ),
-                                validator: (passwordValue) {
-                                  if (passwordValue.isEmpty) {
+                                validator: (otpValue) {
+                                  if (otpValue.isEmpty) {
                                     return 'Please enter Otp';
+                                  } else if (otpValue.length < 6) {
+                                    return 'please enter valid otp';
                                   }
-                                  otp = passwordValue;
+                                  otp = otpValue;
                                   return null;
                                 },
                               ),
@@ -240,7 +244,7 @@ class _OtpPageState extends State<OtpPage> {
       'otp': otp,
     };
 
-    var res = await Network().authData(data, '/api/register');
+    var res = await Network().authData(data, '/register');
     var body = json.decode(res.body);
     if (body['status'] == 'success') {
       SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -249,13 +253,16 @@ class _OtpPageState extends State<OtpPage> {
       localStorage.setString('data', json.encode(body['data']));
 
       print(json.encode(body['msg']));
-     // print(json.encode(body['data']['token']));
 
       print(localStorage.getString('token'));
       Navigator.push(
         context,
         new MaterialPageRoute(builder: (context) => Home()),
       );
+    } else if (body['status'] == 'failed') {
+      errorMessage = "The otp field is not match";
+
+      print(errorMessage);
     }
 
     setState(() {
