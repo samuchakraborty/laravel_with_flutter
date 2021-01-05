@@ -51,6 +51,9 @@ class _RegisterState extends State<Register> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              SizedBox(
+                                height: 10,
+                              ),
                               TextFormField(
                                 // controller: mobilecontroller,
 
@@ -63,7 +66,9 @@ class _RegisterState extends State<Register> {
                                     Icons.phone,
                                     color: Colors.grey,
                                   ),
-                                  hintText: "Mobile",
+                                  hintText: "Enter your Mobile",
+                                  labelText: "Mobile",
+                                  border: OutlineInputBorder(),
                                   hintStyle: TextStyle(
                                       color: Color(0xFF9b9b9b),
                                       fontSize: 15,
@@ -80,6 +85,9 @@ class _RegisterState extends State<Register> {
                                   return null;
                                 },
                               ),
+                              SizedBox(
+                                height: 10,
+                              ),
                               TextFormField(
                                 style: TextStyle(color: Color(0xFF000000)),
                                 cursorColor: Color(0xFF9b9b9b),
@@ -89,7 +97,9 @@ class _RegisterState extends State<Register> {
                                     Icons.insert_emoticon,
                                     color: Colors.grey,
                                   ),
-                                  hintText: "Name",
+                                  hintText: "Enter your Name",
+                                  labelText: "Name",
+                                  border: OutlineInputBorder(),
                                   hintStyle: TextStyle(
                                       color: Color(0xFF9b9b9b),
                                       fontSize: 15,
@@ -103,52 +113,9 @@ class _RegisterState extends State<Register> {
                                   return null;
                                 },
                               ),
-                              // TextFormField(
-                              //   style: TextStyle(color: Color(0xFF000000)),
-                              //   cursorColor: Color(0xFF9b9b9b),
-                              //   keyboardType: TextInputType.text,
-                              //   decoration: InputDecoration(
-                              //     prefixIcon: Icon(
-                              //       Icons.insert_emoticon,
-                              //       color: Colors.grey,
-                              //     ),
-                              //     hintText: "Last Name",
-                              //     hintStyle: TextStyle(
-                              //         color: Color(0xFF9b9b9b),
-                              //         fontSize: 15,
-                              //         fontWeight: FontWeight.normal),
-                              //   ),
-                              //   validator: (lastname) {
-                              //     if (lastname.isEmpty) {
-                              //       return 'Please enter your last name';
-                              //     }
-                              //     lname = lastname;
-                              //     return null;
-                              //   },
-                              // ),
-                              // TextFormField(
-                              //   style: TextStyle(color: Color(0xFF000000)),
-                              //   cursorColor: Color(0xFF9b9b9b),
-                              //   keyboardType: TextInputType.text,
-                              //   decoration: InputDecoration(
-                              //     prefixIcon: Icon(
-                              //       Icons.phone,
-                              //       color: Colors.grey,
-                              //     ),
-                              //     hintText: "Phone",
-                              //     hintStyle: TextStyle(
-                              //         color: Color(0xFF9b9b9b),
-                              //         fontSize: 15,
-                              //         fontWeight: FontWeight.normal),
-                              //   ),
-                              //   validator: (phonenumber) {
-                              //     if (phonenumber.isEmpty) {
-                              //       return 'Please enter phone number';
-                              //     }
-                              //     phone = phonenumber;
-                              //     return null;
-                              //   },
-                              // ),
+                              SizedBox(
+                                height: 10,
+                              ),
                               TextFormField(
                                 style: TextStyle(color: Color(0xFF000000)),
                                 cursorColor: Color(0xFF9b9b9b),
@@ -159,7 +126,9 @@ class _RegisterState extends State<Register> {
                                     Icons.vpn_key,
                                     color: Colors.grey,
                                   ),
-                                  hintText: "Password",
+                                  hintText: "Enter your Password",
+                                  labelText: "Password",
+                                  border: OutlineInputBorder(),
                                   hintStyle: TextStyle(
                                       color: Color(0xFF9b9b9b),
                                       fontSize: 15,
@@ -252,7 +221,7 @@ class _RegisterState extends State<Register> {
       'name': name,
     };
 
-    var res = await Network().authData(data, '/api/send/otp');
+    var res = await Network().authData(data, '/send/otp');
     var body = json.decode(res.body);
     if (body['status'] == 'success') {
       //  SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -267,16 +236,6 @@ class _RegisterState extends State<Register> {
     }
 
     if (body['status'] == 'failed') {
-      // SharedPreferences localStorage = await SharedPreferences.getInstance();
-      // localStorage.setString('token', json.encode(body['token']));
-      //   localStorage.setString('msg', json.encode(body['msg']));
-      //  localStorage.setString(
-      //   'errorMessage', json.encode(body['data']['mobile']));
-
-      //localStorage.setString('data', json.encode(body['data']));
-
-      // var user = jsonDecode(localStorage.getString('data'));
-
       errorMessage =
           json.encode(body['data']['mobile'][0]).replaceAll('"', " ");
       //  List<dynamic> output = jsonDecode(errorMessage);
