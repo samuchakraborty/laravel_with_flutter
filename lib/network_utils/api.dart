@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Network {
-  final String baseUrl = "https://test.anazbd.com/";
+  final String baseUrl = "https://test.anazbd.com/api";
 
   var token;
 
@@ -13,7 +13,7 @@ class Network {
     // token = jsonDecode(localStorage.getString('data'))['token'];
 
     var user = jsonDecode(localStorage.getString('data'));
-
+  
     token = user['token'];
     print(token);
   }
@@ -27,7 +27,7 @@ class Network {
   getData(apiUrl) async {
     var fullUrl = baseUrl + apiUrl;
     await _getToken();
-    return await http.post(fullUrl, headers: _setHeaders());
+    return await http.get(fullUrl, headers: _setHeaders());
   }
 
 //is called arrow function
