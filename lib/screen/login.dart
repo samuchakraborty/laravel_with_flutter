@@ -19,7 +19,7 @@ class _LoginState extends State<Login> {
   var mobileError;
   var passwordError;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  bool _secureText = true;
   _showMsg(msg) {
     final snackBar = SnackBar(
       content: Text(msg),
@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
                               TextFormField(
                                 style: TextStyle(color: Color(0xFF000000)),
                                 cursorColor: Color(0xFF9b9b9b),
-                                keyboardType: TextInputType.text,
+                                keyboardType: TextInputType.phone,
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(),
                                   prefixIcon: Icon(
@@ -96,11 +96,21 @@ class _LoginState extends State<Login> {
                                 style: TextStyle(color: Color(0xFF000000)),
                                 cursorColor: Color(0xFF9b9b9b),
                                 keyboardType: TextInputType.text,
-                                obscureText: false,
+                                obscureText: _secureText,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.vpn_key,
                                     color: Colors.grey,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(_secureText
+                                        ? Icons.remove_red_eye
+                                        : Icons.remove_red_eye_outlined),
+                                    onPressed: () {
+                                      setState(() {
+                                        _secureText = !_secureText;
+                                      });
+                                    },
                                   ),
                                   hintText: "Enter your Password",
                                   labelText: "Password",
