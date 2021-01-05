@@ -21,12 +21,17 @@ class _HomeState extends State<Home> {
 
   _loadUserData() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var user = jsonDecode(localStorage.getString('data'));
+    var users = jsonDecode(localStorage.getString('data'));
 
-    if (user != null) {
+    if (users != null) {
       setState(() {
-        name = user['name'];
-        token = user['token'];
+        name = users['name'];
+        token = users['token'];
+      });
+    } else if (users == null) {
+      setState(() {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Login()));
       });
     }
   }
@@ -75,14 +80,17 @@ class _HomeState extends State<Home> {
     var res = await Network().getData('/logout');
     var body = json.decode(res.body);
     print(body);
-    if (res["message"] != "success") {
+    if (res.statusCode == 200) {
       print("on clicked");
       SharedPreferences localStorage = await SharedPreferences.getInstance();
-      //  localStorage.remove('data');
+      // localStorage.remove(user);
       //localStorage.remove('token');
-      localStorage.remove(token);
-
+      localStorage.remove('token');
+      localStorage.remove('data');
       Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    } else {
+      print(res.statusCode);
+      print("not get");
     }
   }
 }
