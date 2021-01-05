@@ -16,6 +16,8 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   var mobile;
   var password;
+  var mobileError;
+  var passwordError;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   _showMsg(msg) {
@@ -58,40 +60,52 @@ class _LoginState extends State<Login> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              TextFormField(
-                                style: TextStyle(color: Color(0xFF000000)),
-                                cursorColor: Color(0xFF9b9b9b),
-                                keyboardType: TextInputType.text,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.email,
-                                    color: Colors.grey,
-                                  ),
-                                  hintText: "Mobile",
-                                  hintStyle: TextStyle(
-                                      color: Color(0xFF9b9b9b),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal),
-                                ),
-                                validator: (emailValue) {
-                                  if (emailValue.isEmpty) {
-                                    return 'Please enter email';
-                                  }
-                                  mobile = emailValue;
-                                  return null;
-                                },
+                              SizedBox(
+                                height: 10,
                               ),
                               TextFormField(
                                 style: TextStyle(color: Color(0xFF000000)),
                                 cursorColor: Color(0xFF9b9b9b),
                                 keyboardType: TextInputType.text,
-                                obscureText: true,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  prefixIcon: Icon(
+                                    Icons.email,
+                                    color: Colors.grey,
+                                  ),
+                                  hintText: "Enter your Mobile",
+                                  labelText: "Mobile",
+                                  errorText: mobileError,
+                                  hintStyle: TextStyle(
+                                      color: Color(0xFF9b9b9b),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                                validator: (mobileValue) {
+                                  if (mobileValue.isEmpty) {
+                                    return 'Please enter email';
+                                  } else if (mobileValue.length < 11) {
+                                    return 'please enter valid number';
+                                  }
+                                  mobile = mobileValue;
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 10),
+                              TextFormField(
+                                style: TextStyle(color: Color(0xFF000000)),
+                                cursorColor: Color(0xFF9b9b9b),
+                                keyboardType: TextInputType.text,
+                                obscureText: false,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.vpn_key,
                                     color: Colors.grey,
                                   ),
-                                  hintText: "Password",
+                                  hintText: "Enter your Password",
+                                  labelText: "Password",
+                                  border: OutlineInputBorder(),
+                                  errorText: passwordError,
                                   hintStyle: TextStyle(
                                       color: Color(0xFF9b9b9b),
                                       fontSize: 15,
@@ -175,7 +189,7 @@ class _LoginState extends State<Login> {
     });
     var data = {'mobile': mobile, 'password': password};
 
-    var res = await Network().authData(data, '/api/login');
+    var res = await Network().authData(data, '/login');
     var body = json.decode(res.body);
     if (res.statusCode == 200) {
       SharedPreferences localStorage = await SharedPreferences.getInstance();
@@ -185,6 +199,8 @@ class _LoginState extends State<Login> {
         context,
         new MaterialPageRoute(builder: (context) => Home()),
       );
+    } else if (res.statusCode != 200) {
+      mobileError = "These credentials do not match our records.";
     } else {
       _showMsg(body['msg']);
     }
