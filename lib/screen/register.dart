@@ -17,6 +17,7 @@ class _RegisterState extends State<Register> {
   var password;
   var name;
   var errorMessage;
+  bool _secureText = true;
   // final mobilecontroller = TextEditingController();
   // getItemAndNavigate(BuildContext context) {
   //   Navigator.push(
@@ -120,7 +121,7 @@ class _RegisterState extends State<Register> {
                                 style: TextStyle(color: Color(0xFF000000)),
                                 cursorColor: Color(0xFF9b9b9b),
                                 keyboardType: TextInputType.text,
-                                obscureText: true,
+                                obscureText: _secureText,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.vpn_key,
@@ -129,6 +130,16 @@ class _RegisterState extends State<Register> {
                                   hintText: "Enter your Password",
                                   labelText: "Password",
                                   border: OutlineInputBorder(),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(_secureText
+                                        ? Icons.remove_red_eye
+                                        : Icons.remove_red_eye_outlined),
+                                    onPressed: () {
+                                      setState(() {
+                                        _secureText = !_secureText;
+                                      });
+                                    },
+                                  ),
                                   hintStyle: TextStyle(
                                       color: Color(0xFF9b9b9b),
                                       fontSize: 15,
